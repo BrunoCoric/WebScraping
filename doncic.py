@@ -54,7 +54,8 @@ def statistics(game_list):
             dict_both[key] = val
 
 
-
+    # reads statistics from the file
+    
     # with open("doncic2.txt", "w") as f:
     #     print("Lost ball", file=f)
     #     for key,val in dir_lost.items():
@@ -81,6 +82,7 @@ def statistics(game_list):
     #     print("\n", file=f)
 
 
+# shows the graph with players who had most steals on Luka DOnčić   
 def load_statistics():
     file1 = open("doncic2.txt","r")
     lines = file1.readlines()
@@ -125,13 +127,16 @@ def load_statistics():
 
 
 
-
+# function that gets the html file from the link and finds all the games that Luka Dončić has played
 def download_page(url1,url2):
     html_page = requests.get(url1).text
     soup = bs(html_page,"html.parser")
+    
+    # list of links to the games that Luka Dončić has played
     game_list = []
     base = "https://www.basketball-reference.com/boxscores/pbp/"
 
+    # finds links to the games that Luka Dončić has played in 2019
     for link in soup.find_all("td", attrs={"data-stat" : "date_game"}):
         file = str(link).split("/")[2]
         file = file.split('\"')[0]
@@ -140,15 +145,21 @@ def download_page(url1,url2):
 
     html_page = requests.get(url2).text
     soup = bs(html_page, "html.parser")
+    
+    #finds links to the games that Luka Dončić has played in 2020
     for link in soup.find_all("td", attrs={"data-stat": "date_game"}):
         file = str(link).split("/")[2]
         file = file.split('\"')[0]
         if (file):
             game_list.append(base + file)
-    load_statistics()
-    #statistics(game_list)
+            
+    # plots the graph that shows players with the most steals of Luka Dončić
+    #load_statistics()
+    
+    # gets the statistics on Luka Dončić's turnovers
+    statistics(game_list)
 
 
-
+# url that contains all the game that player Luka Dončić has played in 2019 and 2020
 if __name__ == "__main__":
     download_page("https://www.basketball-reference.com/players/d/doncilu01/gamelog/2019","https://www.basketball-reference.com/players/d/doncilu01/gamelog/2020")
